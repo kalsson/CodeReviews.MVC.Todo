@@ -1,4 +1,4 @@
-const apiBaseUrl = "https://localhost:7219/todoitems"; // Minimal API base URL
+const apiBaseUrl = "/todoitems"; // Updated base URL for MVC + API project
 const todoListElement = document.getElementById("todo-list");
 const todoForm = document.getElementById("todo-form");
 const todoNameInput = document.getElementById("todo-name");
