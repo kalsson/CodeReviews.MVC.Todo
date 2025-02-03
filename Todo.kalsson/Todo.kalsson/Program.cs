@@ -100,13 +100,17 @@ static async Task<IResult> UpdateTodo(int id, TodoItemDTO todoItemDTO, TodoDb db
 
     if (todo is null) return TypedResults.NotFound();
 
-    todo.Name = todoItemDTO.Name;
+    // Only update fields that are NOT null
+    if (todoItemDTO.Name != null)
+        todo.Name = todoItemDTO.Name;
+
     todo.IsComplete = todoItemDTO.IsComplete;
 
     await db.SaveChangesAsync();
 
     return TypedResults.NoContent();
 }
+
 
 static async Task<IResult> DeleteTodo(int id, TodoDb db)
 {
