@@ -2,13 +2,35 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add DbContext
 builder.Services.AddDbContext<TodoDb>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add exception filter
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        // Add your MVC project's URL here (front-end project using HTTPS)
+        policy.WithOrigins("https://localhost:7057")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
+// Use CORS in the middleware pipeline
+app.UseCors("AllowSpecificOrigins");
+
+// Define route group
 RouteGroupBuilder todoItems = app.MapGroup("/todoitems");
 
+// Add endpoint mappings
 todoItems.MapGet("/", GetAllTodos);
 todoItems.MapGet("/complete", GetCompleteTodos);
 todoItems.MapGet("/{id}", GetTodo);
@@ -18,12 +40,14 @@ todoItems.MapDelete("/{id}", DeleteTodo);
 
 app.Run();
 
+// CRUD methods
 static async Task<IResult> GetAllTodos(TodoDb db)
 {
     return TypedResults.Ok(await db.Todos.Select(x => new TodoItemDTO(x)).ToArrayAsync());
 }
 
-static async Task<IResult> GetCompleteTodos(TodoDb db) {
+static async Task<IResult> GetCompleteTodos(TodoDb db)
+{
     return TypedResults.Ok(await db.Todos.Where(t => t.IsComplete).Select(x => new TodoItemDTO(x)).ToListAsync());
 }
 

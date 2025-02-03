@@ -1,8 +1,16 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Todo List SPA";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div id="app">
+    <h1>Todo List</h1>
+    
+    <form id="todo-form">
+        <input type="text" id="todo-name" placeholder="Enter a todo name" required />
+        <button type="submit">Add Todo</button>
+    </form>
+
+    <ul id="todo-list">
+        <!-- Dynamic todo list will be rendered here -->
+    </ul>
 </div>

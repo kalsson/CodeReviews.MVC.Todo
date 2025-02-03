@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 1rem;
+}
+
+#todo-form {
+    margin-bottom: 1rem;
+}
+
+#todo-form input {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+#todo-form button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#todo-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#todo-list li {
+    margin: 0.5rem 0;
+}
+
+#todo-list li button {
+    margin-left: 1rem;
+    padding: 0.3rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
