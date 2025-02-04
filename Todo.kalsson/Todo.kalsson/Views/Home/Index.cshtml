@@ -31,12 +31,20 @@
                         <label for="edit-name" class="form-label">Todo Name</label>
                         <input type="text" id="edit-name" class="form-control" required/>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="edit-complete" />
                         <label for="edit-complete" class="form-check-label">Mark as Complete</label>
                     </div>
                     <input type="hidden" id="edit-id" />
                 </form>
+
+                <!-- Status Message for Pending or Success -->
+                <div id="status-message" class="mt-3 text-warning" style="display: none;">
+                    No changes have been saved yet.
+                </div>
+                <div id="success-message" class="mt-3 text-success" style="display: none;">
+                    Changes saved successfully!
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

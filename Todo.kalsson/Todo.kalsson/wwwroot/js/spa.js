@@ -58,6 +58,8 @@ confirmDeleteBtn.addEventListener("click", async () => {
         fetchTodos(); // Refresh the task list
     } catch (error) {
         console.error("Failed to delete todo:", error);
+        // You can optionally show a toast or error alert here.
+        alert("Failed to delete todo. Please try again.");
     }
 });
 
@@ -66,7 +68,27 @@ function showEditModal(id, name, isComplete) {
     editIdInput.value = id;
     editNameInput.value = name;
     editCompleteInput.checked = isComplete;
+
+    // Display the initial warning message
+    const statusMessage = document.getElementById("status-message");
+    statusMessage.textContent = "No changes have been saved yet.";
+    statusMessage.classList.remove("text-success");
+    statusMessage.classList.add("text-warning");
+    statusMessage.style.display = "block";
+
     editModal.show();
+}
+
+// Pending changes listener
+editNameInput.addEventListener("input", () => showPendingMessage());
+editCompleteInput.addEventListener("change", () => showPendingMessage());
+
+function showPendingMessage() {
+    const statusMessage = document.getElementById("status-message");
+    statusMessage.textContent = "No changes have been saved yet.";
+    statusMessage.classList.remove("text-success");
+    statusMessage.classList.add("text-warning");
+    statusMessage.style.display = "block";
 }
 
 // Save Changes from Edit Modal
@@ -76,38 +98,55 @@ document.getElementById("save-edit-btn").addEventListener("click", async () => {
     const isComplete = editCompleteInput.checked;
 
     if (!name) {
-        alert("Task name cannot be empty!");
+        alert("Task name cannot be empty!"); // Cannot save without a valid name
         return;
     }
 
     try {
-        // Always send id, name, and isComplete
+        // Always send id, name, and isComplete to the API
         await fetch(`${apiBaseUrl}/${id}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, name, isComplete }),
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({id, name, isComplete}),
         });
 
-        editModal.hide();
-        fetchTodos(); // Refresh the list
+        // Show success message
+        const statusMessage = document.getElementById("status-message");
+        statusMessage.textContent = "Changes saved successfully!";
+        statusMessage.classList.remove("text-warning");
+        statusMessage.classList.add("text-success");
+
+        // Hide the modal after a short delay
+        setTimeout(() => {
+            editModal.hide();
+            fetchTodos(); // Refresh the task list
+            statusMessage.style.display = "none"; // Hide the status message
+        }, 2000); // Adjust delay as needed
     } catch (error) {
         console.error("Failed to save changes:", error);
+        const statusMessage = document.getElementById("status-message");
+        statusMessage.textContent = "Failed to save changes. Please try again.";
+        statusMessage.classList.remove("text-success");
+        statusMessage.classList.add("text-danger");
+        statusMessage.style.display = "block"; // Show error message
     }
+
 });
 
 // Toggle task completion and retain task name
 async function toggleTodoComplete(id, isComplete, name) {
     try {
-        // Always send the complete object: {id, name, isComplete}
+        // Always send the complete object: { id, name, isComplete }
         await fetch(`${apiBaseUrl}/${id}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, name, isComplete }),
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({id, name, isComplete}),
         });
 
         fetchTodos(); // Refresh the list
     } catch (error) {
         console.error("Failed to toggle task completion:", error);
+        alert("Failed to update task status. Please try again."); // Optional
     }
 }
 
@@ -121,14 +160,15 @@ async function addTodo(event) {
     try {
         await fetch(apiBaseUrl, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, isComplete: false }),
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({name, isComplete: false}),
         });
 
         todoNameInput.value = ""; // Clear the input
         fetchTodos(); // Refresh the todo list
     } catch (error) {
         console.error("Failed to add todo:", error);
+        alert("Failed to add todo. Please try again."); // Optional
     }
 }
 
